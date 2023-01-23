@@ -2,35 +2,34 @@
 #include "gemt_proto1.h"
 
 
-// Displays the instructions to a test (pins to connect to, etc.)
-// bool return determines if test will proceed or go back to previous screen
-bool infoScreen (String infoMsg)
-{
 
-}
 
-void setup(void)
+void setup (void)
 {
   delay(500);
   Serial.begin(9600);
 }
 
-int main(void)
+int main (void)
 {
   // Must intialize the arduino firmware
   init();
   setup();
   
   // infinite loop
-  while(true)
+  while (true)
   {
     unsigned short int sel = menuSelection();
 
-      switch(sel)
+      switch (sel)
       {
         case 1:
         {
-          Serial.println(sel);
+          bool proceed;
+          Serial.println (sel);
+          proceed = infoScreen("This is a test msg with no real information. Sorry!");
+          Serial.println(proceed);
+          
           break;
         
         }
