@@ -36,20 +36,31 @@ unsigned short int getSerialInput_int(void)
 }
 
 // Function to get user menu selection from serial monitor input
-unsigned short int menuSelection(void)
+// menuName - Name for the desired menu (Main, Sub, Servo, etc.)
+// menuOptions - List of options in your testing suite
+// menuArraySize - number of elements in menuOptions
+unsigned short int menuSelection(String menuName, const char* menuOptions[], size_t menuArraySize)
 {
   unsigned short int selection;
   
-  Serial.println();
-  Serial.println("********************************************************");
-  Serial.println("MENU:");;
-  Serial.println("1. nRF24 Test");
-  Serial.println("2. Example 2");
-  Serial.println("3. Example 3");
-  Serial.println("********************************************************");
-  Serial.println("Type item number of desired test: ");
+  char buffer[50]; // init buffer of 50 bytes to hold expected string size
+
+  Serial.println("\n********************************************************");
   
-  return selection = getSerialInput_int();
+  Serial.println(menuName);
+
+  // Assign item number to menuOption. Starts at 1.
+  for (size_t i = 1; i <= menuArraySize; ++i)
+  {    
+    sprintf(buffer, "%d. %s", i, menuOptions[i-1]);
+    Serial.println(buffer);
+  }
+
+  Serial.println("********************************************************");
+  Serial.println("Type item number of desired test: "); 
+  
+  // Return user selection input
+  return selection = getSerialInput_int(); 
 }
 
 
@@ -60,8 +71,7 @@ bool infoScreen (String infoMsg)
   bool proceed = 0;
   unsigned short int selection;
   
-  Serial.println();
-  Serial.println("-------------------------------------------------------");
+  Serial.println("\n-------------------------------------------------------");
   Serial.println(infoMsg);
   Serial.println("1. OK");
   Serial.println("2. BACK");
@@ -69,18 +79,21 @@ bool infoScreen (String infoMsg)
   Serial.println("Type item number of desired action: ");
 
   selection = getSerialInput_int();
+  
   // Loop until we get correct input
-  while (selection != (1 || 2))
+  while (selection != 1 && selection != 2)
   {
     Serial.print(selection); Serial.print(" is an invalid input! \n");
     Serial.println("Please try enter 1 or 2");
     selection = getSerialInput_int();
   }
 
+  // Return param to continue to next screen
   if (selection == 1)
   {
     proceed = true;
   }
+  // Return param to return to previous screen
   else if (selection == 2)
   {
     proceed = false;
