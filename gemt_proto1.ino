@@ -1,13 +1,12 @@
 #include "Arduino.h"
 #include "gemt_proto1.h"
+#include "gemt_testSuite.h"
 
 void setup (void)
 {
   delay(50);
   Serial.begin(19200);
 }
-
-// FIXME: Getting stuck on first input for selections
 
 
 int main (void)
@@ -60,12 +59,12 @@ int main (void)
           {
             case 1: // Manual mode
             {
-              bool proceed;
-              proceed = infoScreen(servoConnectionInfoMsg);
+              bool proceed = infoScreen(servoConnectionInfoMsg);
 
               if (proceed == true)
               {
                 //run test
+                servoManualTest();
               }
 
               break;
@@ -83,6 +82,7 @@ int main (void)
             default:
             {
               Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
+              break;
             }
           }        
         }

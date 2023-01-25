@@ -18,6 +18,18 @@ void servoManualTest(void)
 
   int angle = 0;
 
+  /*
+  const char inputInstructions[] = {"Input Instructions:\n
+      Enter an integer to change multiplier (DEFAULT = 1)\n
+      Enter + to move CW by multiplier\n
+      Enter - to move CCW by multiplier\n
+      Enter h to go to 0 angle\n
+      Enter l to go to 180 angle\n
+      Enter x to exit test\n " " "};
+
+
+  Serial.println(inputInstructions);
+  */
   if (angle < 0)
   {
     angle = 0;
