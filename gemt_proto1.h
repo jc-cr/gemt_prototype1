@@ -31,7 +31,6 @@ unsigned short int getSerialInput_int(void)
       }   
     }
   }
-
   return input;  
 }
 
@@ -57,10 +56,19 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
   }
 
   Serial.println("********************************************************");
-  Serial.println("Type item number of desired test: "); 
+  Serial.println("Type item number of desired test: \n"); 
+  selection = getSerialInput_int();
   
+  // Auto catch any invalid menu selection parameters
+  // From getSerialInput_int() we assume 0 is not an option
+  while (selection > menuArraySize || selection <= 0)
+  {
+    Serial.println("menuSelection() caught invalid input!"); //#DEBUG
+    selection = getSerialInput_int();
+  }
+    
   // Return user selection input
-  return selection = getSerialInput_int(); 
+  return selection; 
 }
 
 
@@ -76,7 +84,7 @@ bool infoScreen (String infoMsg)
   Serial.println("1. OK");
   Serial.println("2. BACK");
   Serial.println("-------------------------------------------------------");
-  Serial.println("Type item number of desired action: ");
+  Serial.println("Type item number of desired action: \n");
 
   selection = getSerialInput_int();
   
@@ -98,7 +106,6 @@ bool infoScreen (String infoMsg)
   {
     proceed = false;
   }
-
 
   return proceed;
 }
