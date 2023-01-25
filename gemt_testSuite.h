@@ -1,6 +1,36 @@
 #include "Arduino.h"
 #include <Servo.h>
+#include "gemt_proto1.h"
 
+
+
+
+
+// Function to manually turn 9g microservo through 180 deg using Serial Monitor input
+// User can enter:
+//    int, angle multiplier
+//    '+' or '-', which will move servo CW or CCW; This will be a counter multiplied by multiplier
+//    'h', return to home (0 deg)
+//    'l', go to limit (180 deg)
+void servoManualTest(void)
+{
+  // servo.attach(9);
+
+  int angle = 0;
+
+  if (angle < 0)
+  {
+    angle = 0;
+  }
+
+  else if (angle > 180)
+  {
+    angle = 180;
+  }
+}
+
+
+/*
 
 // Encoder based servo test
 // Will keep for ref. To be updated with arrow key version
@@ -46,24 +76,7 @@ void servoManual_test(void)
   lastStateCLK = currentStateCLK;
 }
 
-
-// Function to manually turn 9g microservo through 180 deg using Serial Monitor input
-// User can enter:
-//    int, angle multiplier
-//    '+' or '-', which will move servo CW or CCW; This will be a counter multiplied by multiplier
-//    'h', return to home (0 deg)
-//    'l', go to limit (180 deg)
-void servoManualTest(void)
-{
-  // servo.attach(9);
-
-
-
-
-}
-
-
-
+*/
 
 
 /*
