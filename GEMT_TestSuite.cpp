@@ -4,7 +4,9 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <Servo.h>
 #include "Arduino.h"
+#include "SR04.H"
 
 // ESR Settings:
 //-----------------------------------------------------------------
@@ -99,7 +101,7 @@ double ESR_test(void)
   }
   totalAvg /= 4;
   
-  
+  Serial.println("ESR Value: " + totalAvg);
   return totalAvg;
 }
 
@@ -275,4 +277,92 @@ bool nRF24_test(void)
 
   // Return final results as bool value
   return result;
+}
+
+bool ultrasonicsensor_test(void)
+{
+  long distance;
+  SR04 sensor = SR04(26,27);
+
+  distance = sensor.Distance();
+  if (distance > 400) {
+    Serial.print("Distance value: ");
+    Serial.print(distance);
+    Serial.print(" cm\n");
+    Serial.print("Fail - Distance exceeds maximum limit of 400 cm\n");
+    Serial.print("****************************************");
+    Serial.print("\n");
+    delay(1000);
+    return false;
+  } 
+   else if (distance <= 0) {
+    Serial.print("Distance value: ");
+    Serial.print(distance);
+    Serial.print(" cm\n");
+    Serial.print("Fail - Check if pins are properly connected\n");
+    Serial.print("****************************************");
+    Serial.print("\n");
+    delay(1000);
+    return false;
+   }
+  else if (distance < 2 && distance > 0) {
+    Serial.print("Distance value: ");
+    Serial.print(distance);
+    Serial.print(" cm\n");
+    Serial.print("Fail - Distance lower than minimum limit of 2 cm\n");
+    Serial.print("****************************************");
+    Serial.print("\n");
+    delay(1000);
+    return false;
+  }
+  else if (distance >= 2 && distance <= 400) {
+    Serial.print("Distance value: ");
+    Serial.print(distance);
+    Serial.print(" cm\n");
+    Serial.print("Pass - Distance within range of 2-400 cm\n");
+    Serial.print("****************************************");
+    Serial.print("\n");
+    delay(1000);
+    return true;
+  }  
+}
+
+void servoManual_test(void)
+{
+  #define CLK 2
+  #define DT 3
+  Servo servo;
+  int counter = 0;
+  int currentStateCLK;
+  int lastStateCLK;
+  pinMode(CLK,INPUT);
+  pinMode(DT,INPUT);
+  servo.attach(9);
+  servo.write(counter);
+  lastStateCLK = digitalRead(CLK);
+
+  // Read the current state of CLK
+  currentStateCLK = digitalRead(CLK);
+  // If last and current state of CLK are different, then pulse occurred
+  // React to only 1 state change to avoid double count
+  if (currentStateCLK != lastStateCLK  && currentStateCLK == 1){
+    // If the DT state is different than the CLK state then
+    // the encoder is rotating CCW so decrement
+    if (digitalRead(DT) != currentStateCLK) {
+      counter --;
+      if (counter<0)
+        counter=0;
+    } else {
+      // Encoder is rotating CW so increment
+      counter ++;
+      if (counter>180)
+        counter=180;
+    }
+    // Move the servo
+    servo.write(counter);
+    Serial.print("Position: ");
+    Serial.println(counter);
+  }
+  // Remember last CLK state
+  lastStateCLK = currentStateCLK;
 }
