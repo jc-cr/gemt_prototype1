@@ -3,6 +3,21 @@
 
 #include "Arduino.h"
 
+//========================================================================
+// Helper functions
+//========================================================================
+
+// Function to print horizontal line of a char
+void printHline(String lineChar)
+{
+  
+  for (int i = 0; i < 72; ++i)
+  {
+    Serial.print(lineChar);
+  }
+
+  Serial.println();
+}
 
 // Function to read user serial input
 // Reads int > 0
@@ -34,6 +49,19 @@ unsigned short int getSerialInput_int(void)
   return input;  
 }
 
+// Function to read user serial input
+// Reads single char
+const char getSerialInput_char(void)
+{
+  
+}
+
+
+
+//========================================================================
+// Screen Display functions
+//========================================================================
+
 // Function to get user menu selection from serial monitor input
 // menuName - Name for the desired menu (Main, Sub, Servo, etc.)
 // menuOptions - List of options in your testing suite
@@ -41,10 +69,9 @@ unsigned short int getSerialInput_int(void)
 unsigned short int menuSelection(String menuName, const char* menuOptions[], size_t menuArraySize)
 {
   unsigned short int selection;
-  
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
 
-  Serial.println("\n********************************************************");
+  printHline("*");
   
   Serial.println(menuName);
 
@@ -55,8 +82,11 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
     Serial.println(buffer);
   }
 
-  Serial.println("********************************************************");
+  printHline("*");
+
   Serial.println("Type item number of desired test: \n"); 
+  printHline("*");
+
   selection = getSerialInput_int();
   
   // Auto catch any invalid menu selection parameters
@@ -79,12 +109,15 @@ bool infoScreen (String infoMsg)
   bool proceed = 0;
   unsigned short int selection;
   
-  Serial.println("\n-------------------------------------------------------");
+  printHline("-");
   Serial.println(infoMsg);
+  printHline("-");
+  
   Serial.println("1. OK");
   Serial.println("2. BACK");
-  Serial.println("-------------------------------------------------------");
-  Serial.println("Type item number of desired action: \n");
+  printHline("-");
+  Serial.println("Type item number of desired action:");
+  printHline("-");
 
   selection = getSerialInput_int();
   

@@ -12,33 +12,51 @@
 //    '+' or '-', which will move servo CW or CCW; This will be a counter multiplied by multiplier
 //    'h', return to home (0 deg)
 //    'l', go to limit (180 deg)
+
+
 void servoManualTest(void)
 {
   // servo.attach(9);
 
   int angle = 0;
+  int multiplier = 1;
+  char buffer[50]; // init buffer of 50 bytes to hold expected string size
+  char input = "";
 
-  /*
-  const char inputInstructions[] = {"Input Instructions:\n
-      Enter an integer to change multiplier (DEFAULT = 1)\n
-      Enter + to move CW by multiplier\n
-      Enter - to move CCW by multiplier\n
-      Enter h to go to 0 angle\n
-      Enter l to go to 180 angle\n
-      Enter x to exit test\n " " "};
+  const char inputInstructions [] ={
+  "Enter an integer > 1 to change multiplier (DEFAULT == 1)\
+  \nEnter + to move CW by multiplier\
+  \nEnter - to move CCW by multiplier\
+  \nEnter h to go to 0 angle\
+  \nEnter l to go to 180 angle\
+  \nEnter x to exit test"};
 
-
-  Serial.println(inputInstructions);
-  */
-  if (angle < 0)
+  while (input != 'x')
   {
-    angle = 0;
+    printHline("#");
+    Serial.println(inputInstructions);
+    printHline("#");
+    sprintf(buffer, "Current Angle: %d\
+                      \nMultiplier: %d\
+                      \n ", angle, multiplier);
+    
+    Serial.println(buffer);
+    printHline("#");
+
+    input = getSerialInput_char();
+
+    if (angle < 0)
+    {
+      angle = 0;
+    }
+
+    else if (angle > 180)
+    {
+      angle = 180;
+    }
   }
 
-  else if (angle > 180)
-  {
-    angle = 180;
-  }
+  
 }
 
 
