@@ -3,9 +3,12 @@
 
 void setup (void)
 {
-  delay(500);
-  Serial.begin(9600);
+  delay(50);
+  Serial.begin(19200);
 }
+
+// FIXME: Getting stuck on first input for selections
+
 
 int main (void)
 {
@@ -32,60 +35,81 @@ int main (void)
   // infinite loop
   while (true)
   {
-    // Get user Serial input for desired main menu test
+    // Main Menu switch    
+      // Get user Serial input for desired main menu test
     unsigned short int sel = menuSelection("Main Menu", mainMenu, (sizeof(mainMenu) / sizeof(char *))); 
-        // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
-    
-      switch (sel)
+                              // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
+    switch (sel)
+    {
+      case 1: // 9G
       {
-        case 1: // 9G
+        String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
+
+        // Servo submenu switch
+        unsigned short int subSel = menuSelection("9G Servo Menu", servoMenu, (sizeof(servoMenu) / sizeof(char *)));  
+       
+        switch(subSel)
         {
-           Serial.println(sel); // DEBUG
+          case 1: // Manual mode
+          {
+            bool proceed;
+            proceed = infoScreen(servoConnectionInfoMsg);
 
-           unsigned short int subSel = menuSelection("9G Servo Menu", servoMenu, (sizeof(servoMenu) / sizeof(char *))); 
-           Serial.println(subSel); // DEBUG
-          
-          break;
+
+            break;
+          }
+          case 2: // Auto mode
+          {
+
+            break;
+          }
+          default:
+          {
+            Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
+          }
         }
-        case 2: // ESR
-        {
-          bool proceed;
-          
-          Serial.println(sel); // DEBUG
+        
+        break;
+      }
+      case 2: // ESR
+      {
+        bool proceed;
+        
+        Serial.println(sel); // DEBUG
 
-          proceed = infoScreen("This is a test msg with no real information. Sorry!");
-          Serial.println(proceed);
-          
-          break;
-        }
-        case 3: // nRF
-        {
-          Serial.println(sel); // DEBUG
+        proceed = infoScreen("This is a test msg with no real information. Sorry!");
+        Serial.println(proceed); // DEBUG
+        
+        break;
+      }
+      case 3: // nRF
+      {
+        Serial.println(sel); // DEBUG
 
-          break;
-        }
-        case 4: // L298N
-        {
-          Serial.println(sel); // DEBUG
+        break;
+      }
+      case 4: // L298N
+      {
+        Serial.println(sel); // DEBUG
 
-          break;
-        }
-        case 5: // Ultrasonic
-        {
-          Serial.println(sel); // DEBUG
+        break;
+      }
+      case 5: // Ultrasonic
+      {
+        Serial.println(sel); // DEBUG
 
-          break;
-        }
-        default:
-        {
-          Serial.println("Invalid input!");
+        break;
+      }
+      default:
+      {
+        Serial.println("Error: Invalid ipunts should be caught by getSerrialInput()!");
 
-          break;
-        }
-      }  
+        break;
+      }
+    }  
 
-      delay(500);
-  }
+    delay(50);
+}
   
 
 return 0;

@@ -1,3 +1,72 @@
+#include "Arduino.h"
+#include <Servo.h>
+
+
+// Encoder based servo test
+// Will keep for ref. To be updated with arrow key version
+
+void servoManual_test(void)
+{
+  #define CLK 2
+  #define DT 3
+  Servo servo;
+  int counter = 0;
+  int currentStateCLK;
+  int lastStateCLK;
+
+  pinMode(CLK,INPUT);
+  pinMode(DT,INPUT);
+  servo.attach(9);
+  servo.write(counter);
+  lastStateCLK = digitalRead(CLK);
+
+  // Read the current state of CLK
+  currentStateCLK = digitalRead(CLK);
+  // If last and current state of CLK are different, then pulse occurred
+  // React to only 1 state change to avoid double count
+  if (currentStateCLK != lastStateCLK  && currentStateCLK == 1){
+    // If the DT state is different than the CLK state then
+    // the encoder is rotating CCW so decrement
+    if (digitalRead(DT) != currentStateCLK) {
+      counter --;
+      if (counter<0)
+        counter=0;
+    } else {
+      // Encoder is rotating CW so increment
+      counter ++;
+      if (counter>180)
+        counter=180;
+    }
+    // Move the servo
+    servo.write(counter);
+    Serial.print("Position: ");
+    Serial.println(counter);
+  }
+  // Remember last CLK state
+  lastStateCLK = currentStateCLK;
+}
+
+
+// Function to manually turn 9g microservo through 180 deg using Serial Monitor input
+// User can enter:
+//    int, angle multiplier
+//    '+' or '-', which will move servo CW or CCW; This will be a counter multiplied by multiplier
+//    'h', return to home (0 deg)
+//    'l', go to limit (180 deg)
+void servoManualTest(void)
+{
+  // servo.attach(9);
+
+
+
+
+}
+
+
+
+
+
+/*
 #include "GEMT_TestSuite.h"
 
 //Include Libraries
@@ -6,7 +75,7 @@
 #include <RF24.h>
 #include <Servo.h>
 #include "Arduino.h"
-#include "SR04.H"
+#include "SR04.H" //What is this?
 
 // ESR Settings:
 //-----------------------------------------------------------------
@@ -30,6 +99,8 @@
 
 #endif
 //-----------------------------------------------------------------
+
+// This artifact from previous development.. can delete
 // Main test filter
 bool GEMT_test(String moduleID)
 {
@@ -366,3 +437,5 @@ void servoManual_test(void)
   // Remember last CLK state
   lastStateCLK = currentStateCLK;
 }
+
+*/

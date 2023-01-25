@@ -58,7 +58,15 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
 
   Serial.println("********************************************************");
   Serial.println("Type item number of desired test: "); 
-  
+  selection = getSerialInput_int();
+
+  // Auto catch any invalid menu selection parameters
+  // From getSerialInput_int() we assume 0 is not an option
+  while (selection > menuArraySize || selection <= 0)
+  {
+    Serial.println("menuSelection() caught invalid input!"); //#DEBUG
+    selection = getSerialInput_int();
+  }  
   // Return user selection input
   return selection = getSerialInput_int(); 
 }
@@ -98,7 +106,6 @@ bool infoScreen (String infoMsg)
   {
     proceed = false;
   }
-
 
   return proceed;
 }
