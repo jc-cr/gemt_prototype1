@@ -2,6 +2,9 @@
 #include "gemt_proto1.h"
 #include "gemt_testSuite.h"
 
+bool DEBUG = true; // Variable to setup debugging
+
+
 void setup (void)
 {
   delay(50);
@@ -15,6 +18,22 @@ int main (void)
   init();
   setup();
 
+
+  // Space to Debug functions without going to main loop
+  if (DEBUG == true) {
+
+    int angle = 0;
+    int multiplier = 1;
+
+    while (true) 
+    {
+      servoManualTest(&angle, &multiplier);
+    }
+
+    return 0;
+  }
+
+  /*
   // Init array of pointers for menus
   const char* mainMenu[] = 
   {
@@ -128,7 +147,7 @@ int main (void)
 
     delay(50);
 }
-  
+*/
 
 return 0;
 }

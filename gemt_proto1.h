@@ -8,7 +8,7 @@
 //========================================================================
 
 // Function to print horizontal line of a char
-void printHline(String lineChar)
+void printHline(char lineChar)
 {
   
   for (int i = 0; i < 72; ++i)
@@ -51,9 +51,19 @@ unsigned short int getSerialInput_int(void)
 
 // Function to read user serial input
 // Reads single char
-const char getSerialInput_char(void)
+char getSerialInput_char(void)
 {
-  
+  char input = 0;
+  bool dataAvailable = 0;
+
+  while (dataAvailable == 0)
+  {
+    if (Serial.available() > 0) {
+         dataAvailable = 1;
+        input = Serial.read();      
+    }
+  }
+  return input; 
 }
 
 
@@ -71,7 +81,7 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
   unsigned short int selection;
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
 
-  printHline("*");
+  printHline('*');
   
   Serial.println(menuName);
 
@@ -82,10 +92,10 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
     Serial.println(buffer);
   }
 
-  printHline("*");
+  printHline('*');
 
   Serial.println("Type item number of desired test: \n"); 
-  printHline("*");
+  printHline('*');
 
   selection = getSerialInput_int();
   
@@ -109,15 +119,15 @@ bool infoScreen (String infoMsg)
   bool proceed = 0;
   unsigned short int selection;
   
-  printHline("-");
+  printHline('-');
   Serial.println(infoMsg);
-  printHline("-");
+  printHline('-');
   
   Serial.println("1. OK");
   Serial.println("2. BACK");
-  printHline("-");
+  printHline('-');
   Serial.println("Type item number of desired action:");
-  printHline("-");
+  printHline('-');
 
   selection = getSerialInput_int();
   

@@ -2,10 +2,6 @@
 #include <Servo.h>
 #include "gemt_proto1.h"
 
-
-
-
-
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // User can enter:
 //    int, angle multiplier
@@ -14,14 +10,23 @@
 //    'l', go to limit (180 deg)
 
 
-void servoManualTest(void)
+// FIXME: Change size of for loop
+// Need to check if char matches expected inpputs
+
+void servoManualTest(int* angle, int* multiplier)
 {
   // servo.attach(9);
-
-  int angle = 0;
-  int multiplier = 1;
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
-  char input = "";
+  const char expectedInputs[5] = {
+    '+',
+    '-',
+    'h',
+    'l',
+    'x'
+    };
+
+  char input = 0;
+
 
   const char inputInstructions [] ={
   "Enter an integer > 1 to change multiplier (DEFAULT == 1)\
@@ -33,30 +38,38 @@ void servoManualTest(void)
 
   while (input != 'x')
   {
-    printHline("#");
-    Serial.println(inputInstructions);
-    printHline("#");
-    sprintf(buffer, "Current Angle: %d\
-                      \nMultiplier: %d\
-                      \n ", angle, multiplier);
-    
-    Serial.println(buffer);
-    printHline("#");
+  printHline('#');
+  Serial.println(inputInstructions);
+  printHline('#');
+  sprintf(buffer, "Current Angle: %d  Multiplier: %d \n", *angle, *multiplier);
+  Serial.println(buffer);
+  printHline('#');
 
-    input = getSerialInput_char();
+  input = getSerialInput_char();
+  Serial.println(input); // DEBUG
+  
+  // Test for valid input
+  for (size_t i = 0; i < sizeof(expectedInputs); ++i)
+  {
+    // Note: Char can be logiacally compares because it's stored as 8 bit int value
+    // Usally matches ASCII code, so char a='a' == char a= 97 
+    bool notMatch = (input == expectedInputs[i]);
+    Serial.println(expectedInputs[i]);
+    Serial.println(notMatch);
 
-    if (angle < 0)
-    {
-      angle = 0;
-    }
-
-    else if (angle > 180)
-    {
-      angle = 180;
-    }
   }
 
-  
+  if (*angle < 0)
+  {
+    *angle = 0;
+  }
+
+  else if (*angle > 180)
+  {
+    *angle = 180;
+  }
+}
+
 }
 
 
