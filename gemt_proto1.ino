@@ -23,11 +23,10 @@ int main (void)
   if (DEBUG == true) {
 
     int angle = 0;
-    int multiplier = 1;
 
     while (true) 
     {
-      servoManualTest(&angle, &multiplier);
+      servoManualTest(&angle);
     }
 
     return 0;
@@ -60,6 +59,7 @@ int main (void)
   {
     // Main Menu switch    
       // Get user Serial input for desired main menu test
+    Serial.println("Please set Serial Inputs to \'No Line Ending\'");
     unsigned short int mainSel = menuSelection("Main Menu", mainMenu, (sizeof(mainMenu) / sizeof(char *))); 
                               // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
     switch (mainSel)
@@ -70,7 +70,6 @@ int main (void)
         bool localExit = false; // Exit flag when user selects 'Back'
 
         int angle = 0;
-        int multiplier = 1;
 
         // while loop to allow user to go back to previous screen
         while (localExit != true)
@@ -85,12 +84,7 @@ int main (void)
 
               if (proceed == true)
               {
-                //run test
-<<<<<<< HEAD
-                servoManualTest(&angle, &multiplier);
-=======
-                //servoManualTest();
->>>>>>> main
+                servoManualTest(&angle);
               }
 
               break;

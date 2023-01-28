@@ -11,75 +11,51 @@
 //    'h', return to home (0 deg)
 //    'l', go to limit (180 deg)
 
-<<<<<<< HEAD
 
-// FIXME: Change size of for loop
-// Need to check if char matches expected inpputs
 
-void servoManualTest(int* angle, int* multiplier)
-=======
-/*
-void servoManualTest(void)
->>>>>>> main
+void servoManualTest(int* anglePtr)
 {
-  // servo.attach(9);
+  Servo servo;
+  servo.attach(9);
+
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
-  const char expectedInputs[5] = {
-    '+',
-    '-',
-    'h',
-    'l',
-    'x'
-    };
+  unsigned short int input = 0;
 
-  char input = 0;
-
-
-  const char inputInstructions [] ={
-  "Enter an integer > 1 to change multiplier (DEFAULT == 1)\
-  \nEnter + to move CW by multiplier\
-  \nEnter - to move CCW by multiplier\
-  \nEnter h to go to 0 angle\
-  \nEnter l to go to 180 angle\
-  \nEnter x to exit test"};
-
-  while (input != 'x')
+  while (input != 999)
   {
-  printHline('#');
-  Serial.println(inputInstructions);
-  printHline('#');
-  sprintf(buffer, "Current Angle: %d  Multiplier: %d \n", *angle, *multiplier);
-  Serial.println(buffer);
-  printHline('#');
+    printHline('#');
+    Serial.println("Enter desired angle\
+  \nEnter 999 to return to Servo Menu");
+    printHline('#');
+    sprintf(buffer, "Current Angle: %d \n", *anglePtr);
+    Serial.println(buffer);
+    printHline('#');
 
-  input = getSerialInput_char();
-  Serial.println(input); // DEBUG
-  
-  // Test for valid input
-  for (size_t i = 0; i < sizeof(expectedInputs); ++i)
-  {
-    // Note: Char can be logiacally compares because it's stored as 8 bit int value
-    // Usally matches ASCII code, so char a='a' == char a= 97 
-    bool notMatch = (input == expectedInputs[i]);
-    Serial.println(expectedInputs[i]);
-    Serial.println(notMatch);
-
+    input = getSerialInput_int();
+    
+    
+    // Servo angle limits
+    if (input < 0)
+    {
+      *anglePtr = 0;
+      servo.write(*anglePtr);
+    }
+    else if (input > 180)
+    {
+      *anglePtr = 180;
+      servo.write(anglePtr);
+    }
+    else
+    {
+      *anglePtr = input;
+      servo.write(*anglePtr);
+    }
+    
   }
 
-  if (*angle < 0)
-  {
-    *angle = 0;
-  }
-
-  else if (*angle > 180)
-  {
-    *angle = 180;
-  }
+  Serial.println("Returning to Servo Menu..");
 }
 
-}
-
-*/
 /*
 
 // Encoder based servo test
@@ -183,6 +159,8 @@ bool GEMT_test(String moduleID)
 }
 
 */
+
+
 double ESR_test(void)
 {
   unsigned long esrSamples;
@@ -199,7 +177,7 @@ double ESR_test(void)
   Serial.println("Setting up");
   
   Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-  analogReference(INTERNAL);//setting vRef to internal reference 1.1V
+  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
  
 
   pinMode(ESR_PIN, INPUT);//reading miliVolt
@@ -412,11 +390,11 @@ bool nRF24_test(void)
   // Return final results as bool value
   return result;
 }
-
 */
 
 bool ultrasonicsensor_test(void)
 {
+  /*
   double*   distances;
   double    permDistance;
   double    samples;
@@ -424,7 +402,7 @@ bool ultrasonicsensor_test(void)
   int       trig_pin = 27;
   int       echo_pin = 26;
   
-  HCSR04.begin(trig_pin, echo_pin);
+  HCSR04.begin(trig_pin, echo_pin); // FIXME: THis doesn't work
   while (i < 10)
   {
     distances = HCSR04.measureDistanceCm();
@@ -445,9 +423,14 @@ bool ultrasonicsensor_test(void)
   }
   else if (permDistance >= 2 && permDistance <= 400) {
     return true;
-  }  
+  } 
+  */
+
+  //DEBUG
+  return 1; 
 }
-/*
+
+
 void servoManual_test(void)
 {
   #define CLK 2
@@ -488,4 +471,4 @@ void servoManual_test(void)
   lastStateCLK = currentStateCLK;
 }
 
-*/
+
