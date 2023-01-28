@@ -2,7 +2,7 @@
 #include "gemt_proto1.h"
 #include "gemt_testSuite.h"
 
-bool DEBUG = true; // Variable to setup debugging
+bool DEBUG = false; // Variable to setup debugging
 
 
 void setup (void)
@@ -33,7 +33,7 @@ int main (void)
     return 0;
   }
 
-  /*
+  
   // Init array of pointers for menus
   const char* mainMenu[] = 
   {
@@ -69,6 +69,9 @@ int main (void)
         String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
         bool localExit = false; // Exit flag when user selects 'Back'
 
+        int angle = 0;
+        int multiplier = 1;
+
         // while loop to allow user to go back to previous screen
         while (localExit != true)
         {
@@ -83,7 +86,7 @@ int main (void)
               if (proceed == true)
               {
                 //run test
-                servoManualTest();
+                servoManualTest(&angle, &multiplier);
               }
 
               break;
@@ -147,7 +150,7 @@ int main (void)
 
     delay(50);
 }
-*/
+
 
 return 0;
 }
