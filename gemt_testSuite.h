@@ -1,6 +1,8 @@
 #include "Arduino.h"
 #include <Servo.h>
+#include <HCSR04.h>
 #include "gemt_proto1.h"
+#include "ESR.h"
 
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // User can enter:
@@ -9,11 +11,16 @@
 //    'h', return to home (0 deg)
 //    'l', go to limit (180 deg)
 
+<<<<<<< HEAD
 
 // FIXME: Change size of for loop
 // Need to check if char matches expected inpputs
 
 void servoManualTest(int* angle, int* multiplier)
+=======
+/*
+void servoManualTest(void)
+>>>>>>> main
 {
   // servo.attach(9);
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
@@ -72,7 +79,7 @@ void servoManualTest(int* angle, int* multiplier)
 
 }
 
-
+*/
 /*
 
 // Encoder based servo test
@@ -133,12 +140,14 @@ void servoManual_test(void)
 #include "Arduino.h"
 #include "SR04.H" //What is this?
 
+
+
 // ESR Settings:
 //-----------------------------------------------------------------
 #ifndef GEMT_ESR_h
 #define GEMT_ESR_h
 
-#define FASTADC 1
+define FASTADC 1
 // defines for setting and clearing register bits
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -173,7 +182,7 @@ bool GEMT_test(String moduleID)
   return testResult;
 }
 
-
+*/
 double ESR_test(void)
 {
   unsigned long esrSamples;
@@ -186,12 +195,11 @@ double ESR_test(void)
   double        current = 0.088564;
   int           count = 0;
 
-  Serial.begin(115200);
   Serial.println("ESR Meter");
   Serial.println("Setting up");
   
   Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
+  analogReference(INTERNAL);//setting vRef to internal reference 1.1V
  
 
   pinMode(ESR_PIN, INPUT);//reading miliVolt
@@ -201,7 +209,7 @@ double ESR_test(void)
   digitalWrite(PULSE_PIN,HIGH);//low disables T2
   //pinMode(BUTTON_PIN,INPUT_PULLUP);//setting up for a button (will use this for zeroing)
   delay(1000);
-  Serial.println("Please wait...");
+  Serial.println("Please wait...\n");
 
   
   if (FASTADC) 
@@ -228,7 +236,6 @@ double ESR_test(void)
   }
   totalAvg /= 4;
   
-  Serial.println("ESR Value: " + totalAvg);
   return totalAvg;
 }
 
@@ -280,7 +287,7 @@ long readVcc() {
   return result; // Vcc in millivolts
 }
 
-
+/*
 // Function to test nRF24 plugged into SPI2 port
 // KNown working one goes in SPI1
 // ToDo: figure out why first test is passing when shoudlbn't be... 
@@ -406,54 +413,41 @@ bool nRF24_test(void)
   return result;
 }
 
+*/
+
 bool ultrasonicsensor_test(void)
 {
-  long distance;
-  SR04 sensor = SR04(26,27);
-
-  distance = sensor.Distance();
-  if (distance > 400) {
-    Serial.print("Distance value: ");
-    Serial.print(distance);
-    Serial.print(" cm\n");
-    Serial.print("Fail - Distance exceeds maximum limit of 400 cm\n");
-    Serial.print("****************************************");
-    Serial.print("\n");
+  double*   distances;
+  double    permDistance;
+  double    samples;
+  double    i = 0.0;
+  int       trig_pin = 27;
+  int       echo_pin = 26;
+  
+  HCSR04.begin(trig_pin, echo_pin);
+  while (i < 10)
+  {
+    distances = HCSR04.measureDistanceCm();
+    samples += distances[0];
+    i++;
     delay(1000);
+  }
+  permDistance = samples / i;
+  
+  if (permDistance > 400) {
     return false;
   } 
-   else if (distance <= 0) {
-    Serial.print("Distance value: ");
-    Serial.print(distance);
-    Serial.print(" cm\n");
-    Serial.print("Fail - Check if pins are properly connected\n");
-    Serial.print("****************************************");
-    Serial.print("\n");
-    delay(1000);
+   else if (permDistance <= 0) {
     return false;
    }
-  else if (distance < 2 && distance > 0) {
-    Serial.print("Distance value: ");
-    Serial.print(distance);
-    Serial.print(" cm\n");
-    Serial.print("Fail - Distance lower than minimum limit of 2 cm\n");
-    Serial.print("****************************************");
-    Serial.print("\n");
-    delay(1000);
+  else if (permDistance < 2 && permDistance > 0) {
     return false;
   }
-  else if (distance >= 2 && distance <= 400) {
-    Serial.print("Distance value: ");
-    Serial.print(distance);
-    Serial.print(" cm\n");
-    Serial.print("Pass - Distance within range of 2-400 cm\n");
-    Serial.print("****************************************");
-    Serial.print("\n");
-    delay(1000);
+  else if (permDistance >= 2 && permDistance <= 400) {
     return true;
   }  
 }
-
+/*
 void servoManual_test(void)
 {
   #define CLK 2

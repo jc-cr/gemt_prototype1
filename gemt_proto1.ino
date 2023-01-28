@@ -86,7 +86,11 @@ int main (void)
               if (proceed == true)
               {
                 //run test
+<<<<<<< HEAD
                 servoManualTest(&angle, &multiplier);
+=======
+                //servoManualTest();
+>>>>>>> main
               }
 
               break;
@@ -113,13 +117,30 @@ int main (void)
       }
       case 2: // ESR
       {
-        bool proceed;
-        
-        Serial.println(mainSel); // DEBUG
-
-        proceed = infoScreen("This is a test msg with no real information. Sorry!");
-        Serial.println(proceed); // DEBUG
-        
+        String ESRConnectionInfoMsg = "Connections:\nAnode -> Analog Pin 0\nCathode -> Purple Pin\n";
+        bool   localExit            = false;
+        double esrVal = 0.0;
+        while (localExit != true)
+        {
+          switch (infoScreen(ESRConnectionInfoMsg))
+          {
+            case true: 
+            {
+              esrVal = ESR_test();
+              Serial.print("ESR Value: "); Serial.println(esrVal); Serial.println();
+              break;
+            }
+            case false:
+            {
+              localExit = true;
+              break;
+            }
+            default:
+            {
+              break;
+            }
+          }
+        }
         break;
       }
       case 3: // nRF
@@ -130,19 +151,47 @@ int main (void)
       }
       case 4: // L298N
       {
-        Serial.println(mainSel); // DEBUG
+        String HBridgeConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nMotor Input Pin 1 -> 6\nMotor Input Pin 2 -> 7\n";
 
         break;
       }
       case 5: // Ultrasonic
       {
-        Serial.println(mainSel); // DEBUG
+        String  UltraConnectionInfoMsg  = "Connections:\n+ -> 5V\n- -> GND\nTrig pin -> 27\nEcho pin -> 26\n";
+        bool    localExit               = false;
 
+        while (localExit != true)
+        {
+          switch (infoScreen(UltraConnectionInfoMsg))
+          {
+            case true: 
+            {
+              if (ultrasonicsensor_test())
+              {
+                Serial.println("Test Pass\n");
+              }
+              else
+              {
+                Serial.println("Test Fail\n");
+              }
+              break;
+            }
+            case false:
+            {
+              localExit = true;
+              break;
+            }
+            default:
+            {
+              break;
+            }
+          }
+        }
         break;
       }
       default:
       {
-        Serial.println("Error: Invalid ipunts should be caught by getSerrialInput()!");
+        Serial.println("Error: Invalid inputs should be caught by getSerrialInput()!");
 
         break;
       }
