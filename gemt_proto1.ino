@@ -58,7 +58,7 @@ int main (void)
   {
     // Main Menu switch    
     // Get user Serial input for desired main menu test
-    Serial.println("Please set Serial Inputs to \'No Line Ending\'");
+    Serial.println("\n\nPlease set Serial Inputs to \'No Line Ending\'");
     unsigned short int mainSel = menuSelection("Main Menu", mainMenu, (sizeof(mainMenu) / sizeof(char *))); 
                               // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
     switch (mainSel)
@@ -144,7 +144,15 @@ int main (void)
       }
       case 3: // nRF
       {
-        Serial.println(mainSel); // DEBUG
+        String nRFConnectionInfoMsg = "Connect functional nRF24 module into SPI1 port\
+        \nConnect nRF24 module to be tested into SPI2";
+    
+        bool proceed = infoScreen(nRFConnectionInfoMsg);
+
+        if (proceed == true)
+        {
+          nRFAutoTest();
+        }
 
         break;
       }

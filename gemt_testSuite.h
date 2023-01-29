@@ -3,6 +3,7 @@
 #include <HCSR04.h>
 #include "gemt_proto1.h"
 #include "ESR.h"
+#include <RF24.h>
 
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // Adjusts servo angles based on int inputs
@@ -57,7 +58,8 @@ void servoAutoTest(int* anglePtr)
   servo.attach(9);
 
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
-  
+
+  printHline('#');
   Serial.println("Servo will now rotate to 180 degrees in 10 degree increments");
   delay(1000);
 
@@ -82,69 +84,10 @@ void servoAutoTest(int* anglePtr)
     servo.write(*anglePtr);
     delay(1000);
   }
+  printHline('#');
 }
 
 /*
-
-// Encoder based servo test
-// Will keep for ref. To be updated with arrow key version
-
-void servoManual_test(void)
-{
-  #define CLK 2
-  #define DT 3
-  Servo servo;
-  int counter = 0;
-  int currentStateCLK;
-  int lastStateCLK;
-
-  pinMode(CLK,INPUT);
-  pinMode(DT,INPUT);
-  servo.attach(9);
-  servo.write(counter);
-  lastStateCLK = digitalRead(CLK);
-
-  // Read the current state of CLK
-  currentStateCLK = digitalRead(CLK);
-  // If last and current state of CLK are different, then pulse occurred
-  // React to only 1 state change to avoid double count
-  if (currentStateCLK != lastStateCLK  && currentStateCLK == 1){
-    // If the DT state is different than the CLK state then
-    // the encoder is rotating CCW so decrement
-    if (digitalRead(DT) != currentStateCLK) {
-      counter --;
-      if (counter<0)
-        counter=0;
-    } else {
-      // Encoder is rotating CW so increment
-      counter ++;
-      if (counter>180)
-        counter=180;
-    }
-    // Move the servo
-    servo.write(counter);
-    Serial.print("Position: ");
-    Serial.println(counter);
-  }
-  // Remember last CLK state
-  lastStateCLK = currentStateCLK;
-}
-
-*/
-
-
-/*
-#include "GEMT_TestSuite.h"
-
-//Include Libraries
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-#include <Servo.h>
-#include "Arduino.h"
-#include "SR04.H" //What is this?
-
-
 
 // ESR Settings:
 //-----------------------------------------------------------------
@@ -167,27 +110,7 @@ define FASTADC 1
 //#define BUTTON_PIN 4
 
 #endif
-//-----------------------------------------------------------------
-
-// This artifact from previous development.. can delete
-// Main test filter
-bool GEMT_test(String moduleID)
-{
-  bool testResult;
-  
-  if (moduleID == "nRF24L01")
-  {
-    testResult = nRF24_test();
-  }
-  //
-  // ... DO rest for other modules
-
-
-  return testResult;
-}
-
 */
-
 
 double ESR_test(void)
 {
@@ -293,12 +216,10 @@ long readVcc() {
   return result; // Vcc in millivolts
 }
 
-/*
 // Function to test nRF24 plugged into SPI2 port
 // KNown working one goes in SPI1
-// ToDo: figure out why first test is passing when shoudlbn't be... 
-// 
-bool nRF24_test(void) 
+// FIXME: figure out why first test is passing when shoudlbn't be
+void nRFAutoTest(void) 
 {
   bool result;
   
@@ -313,6 +234,10 @@ bool nRF24_test(void)
   
   //address through which two modules communicate.
   const byte address[6] = "00002";
+  
+  printHline('#');
+  Serial.println("nRF24 Test started...");
+  delay(1000);
 
   // Test connections, display feedback
   if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 1) 
@@ -399,26 +324,33 @@ bool nRF24_test(void)
   
   else if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 0) 
   {
-    // print radio 1 not detected
+    Serial.println("SPI1 not detected");
     result = 0;
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
-    //print radio 2 not detected
+    Serial.println("SPI2 not detected");
     result = 0;
   }
   
   else {
-  // print No radio detected
+    Serial.println("SPI1 and SPI2 not detected");
     result = 0;
   }
 
 
-  // Return final results as bool value
-  return result;
+  // Return final results
+  if (result == 1)
+  {
+     Serial.println("NRF TEST PASSED");
+  }
+  else
+  {
+    Serial.println("NRF TEST FAILED");
+  }
+  printHline('#');
 }
-*/
 
 bool ultrasonicsensor_test(void)
 {
@@ -459,6 +391,11 @@ bool ultrasonicsensor_test(void)
 }
 
 
+/*
+
+// Encoder based servo test
+// Will keep for ref. To be updated with arrow key version
+
 void servoManual_test(void)
 {
   #define CLK 2
@@ -467,6 +404,7 @@ void servoManual_test(void)
   int counter = 0;
   int currentStateCLK;
   int lastStateCLK;
+
   pinMode(CLK,INPUT);
   pinMode(DT,INPUT);
   servo.attach(9);
@@ -498,5 +436,8 @@ void servoManual_test(void)
   // Remember last CLK state
   lastStateCLK = currentStateCLK;
 }
+
+*/
+
 
 
