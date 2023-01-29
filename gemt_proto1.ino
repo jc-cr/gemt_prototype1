@@ -2,7 +2,7 @@
 #include "gemt_proto1.h"
 #include "gemt_testSuite.h"
 
-bool DEBUG = false; // Variable to setup debugging
+bool DEBUG = 0; // Variable to setup debugging
 
 
 void setup (void)
@@ -19,20 +19,19 @@ int main (void)
   setup();
 
 
-  // Space to Debug functions without going to main loop
-  if (DEBUG == true) {
-
+  // Space to Debug functions without going to main menu loop
+  if (DEBUG == 1) 
+  {
     int angle = 0;
 
     while (true) 
     {
-      servoManualTest(&angle);
+      servoAutoTest(&angle);
     }
 
     return 0;
   }
 
-  
   // Init array of pointers for menus
   const char* mainMenu[] = 
   {
@@ -58,14 +57,14 @@ int main (void)
   while (true)
   {
     // Main Menu switch    
-      // Get user Serial input for desired main menu test
+    // Get user Serial input for desired main menu test
     Serial.println("Please set Serial Inputs to \'No Line Ending\'");
     unsigned short int mainSel = menuSelection("Main Menu", mainMenu, (sizeof(mainMenu) / sizeof(char *))); 
                               // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
     switch (mainSel)
     {
       case 1: // 9G
-      {
+      { 
         String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
         bool localExit = false; // Exit flag when user selects 'Back'
 
@@ -91,7 +90,13 @@ int main (void)
             }
             case 2: // Auto mode
             {
+              bool proceed = infoScreen(servoConnectionInfoMsg);
 
+              if (proceed == true)
+              {
+                servoAutoTest(&angle);
+              }
+      
               break;
             }
             case 3: // Back

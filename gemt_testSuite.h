@@ -5,14 +5,7 @@
 #include "ESR.h"
 
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
-// User can enter:
-//    int, angle multiplier
-//    '+' or '-', which will move servo CW or CCW; This will be a counter multiplied by multiplier
-//    'h', return to home (0 deg)
-//    'l', go to limit (180 deg)
-
-
-
+// Adjusts servo angles based on int inputs
 void servoManualTest(int* anglePtr)
 {
   Servo servo;
@@ -54,6 +47,41 @@ void servoManualTest(int* anglePtr)
   }
 
   Serial.println("Returning to Servo Menu..");
+}
+
+// Function for automatic servo testing
+// Goes to 180 deg and then back
+void servoAutoTest(int* anglePtr)
+{
+  Servo servo;
+  servo.attach(9);
+
+  char buffer[50]; // init buffer of 50 bytes to hold expected string size
+  
+  Serial.println("Servo will now rotate to 180 degrees in 10 degree increments");
+  delay(1000);
+
+  for (int i = 0; i <= 18; ++i)
+  {
+    *anglePtr = (10 * i);
+
+    sprintf(buffer, "Current Angle: %d", *anglePtr);
+    Serial.println(buffer);
+    servo.write(*anglePtr);
+    delay(1000);
+  }
+
+  Serial.println("Servo will now rotate to 0 in 10 degree increments");
+  delay(1000);
+  for (int i = 0; i <= 18; ++i)
+  {
+    *anglePtr = (180 - (10 * i));
+
+    sprintf(buffer, "Current Angle: %d", *anglePtr);
+    Serial.println(buffer);
+    servo.write(*anglePtr);
+    delay(1000);
+  }
 }
 
 /*
