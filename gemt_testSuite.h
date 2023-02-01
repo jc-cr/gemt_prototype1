@@ -5,6 +5,22 @@
 #include "ESR.h"
 #include <RF24.h>
 
+void gemTSetup()
+{
+  //ESR Pins
+  pinMode(ESR_PIN, INPUT);//reading miliVolt
+  pinMode(PULSE_PIN, OUTPUT);
+  pinMode(DISCHARGE_PIN, OUTPUT);
+
+  //L8298 Pins
+  pinMode(L8enA, OUTPUT);
+  pinMode(L8in1, OUTPUT);
+  pinMode(L8in2, OUTPUT);
+  pinMode(L8enB, OUTPUT);
+  pinMode(L8in3, OUTPUT);
+  pinMode(L8in4, OUTPUT);
+}
+
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // Adjusts servo angles based on int inputs
 void servoManualTest(int* anglePtr)
@@ -87,31 +103,8 @@ void servoAutoTest(int* anglePtr)
   printHline('#');
 }
 
-/*
-
-// ESR Settings:
-//-----------------------------------------------------------------
-#ifndef GEMT_ESR_h
-#define GEMT_ESR_h
-
-define FASTADC 1
-// defines for setting and clearing register bits
-#ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#endif
-#ifndef sbi
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-#endif
-
-//define the input and output pin we will use
-#define DISCHARGE_PIN 42
-#define ESR_PIN A0
-#define PULSE_PIN 43
-//#define BUTTON_PIN 4
-
-#endif
-*/
-
+//Function for electrolytic capacitor ESR measuring, sends a known well-defined and known current through the cap
+//at a very well-defined voltage and measures the resistance through probes
 double ESR_test(void)
 {
   unsigned long esrSamples;
@@ -128,27 +121,21 @@ double ESR_test(void)
   Serial.println("Setting up");
   
   Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
+  analogReference(INTERNAL);//setting vRef to internal reference 1.1V
  
-
-  pinMode(ESR_PIN, INPUT);//reading miliVolt
-  pinMode(PULSE_PIN, OUTPUT);
   digitalWrite(PULSE_PIN,HIGH);//low enables T1
-  pinMode(DISCHARGE_PIN, OUTPUT);
+  
   digitalWrite(PULSE_PIN,HIGH);//low disables T2
   //pinMode(BUTTON_PIN,INPUT_PULLUP);//setting up for a button (will use this for zeroing)
   delay(1000);
   Serial.println("Please wait...\n");
 
-  
   if (FASTADC) 
   {
     sbi(ADCSRA,ADPS2);
     cbi(ADCSRA,ADPS1);
     sbi(ADCSRA,ADPS0);
   }
-
-  
   //eeprom_read_block((void*)&esrCal, (void*)0, sizeof(esrCal));
 
   while (count < 4)
@@ -352,9 +339,11 @@ void nRFAutoTest(void)
   printHline('#');
 }
 
+//Function which tests if an ultrasonic sensor
+//is measuring distance correctly
 bool ultrasonicsensor_test(void)
 {
-  /*
+  
   double*   distances;
   double    permDistance;
   double    samples;
@@ -362,7 +351,7 @@ bool ultrasonicsensor_test(void)
   int       trig_pin = 27;
   int       echo_pin = 26;
   
-  HCSR04.begin(trig_pin, echo_pin); // FIXME: THis doesn't work
+  HCSR04.begin(trig_pin, echo_pin); 
   while (i < 10)
   {
     distances = HCSR04.measureDistanceCm();
@@ -384,12 +373,62 @@ bool ultrasonicsensor_test(void)
   else if (permDistance >= 2 && permDistance <= 400) {
     return true;
   } 
-  */
-
-  //DEBUG
-  return 1; 
 }
 
+//Function which returns the output voltages
+//on a L8298 motor]
+float L8298_test(void)
+{
+  
+  digitalWrite(L8in1, LOW);
+  digitalWrite(L8in2, LOW);
+  digitalWrite(L8in3, LOW);
+  digitalWrite(L8in4, LOW);
+
+  analogWrite(L8enA, 255);
+  digitalWrite(L8in1, HIGH);
+  digitalWrite(L8in2, LOW);
+  delay(2000);
+  voltL();
+  digitalWrite(L8in1, LOW);
+  digitalWrite(L8in2, HIGH);
+  delay(2000);
+  voltL();
+  
+  analogWrite(L8enB, 255);
+  digitalWrite(L8in3, HIGH);
+  digitalWrite(L8in4, LOW);
+  delay(2000);
+  voltR();
+  digitalWrite(L8in3, LOW);
+  digitalWrite(L8in4, HIGH);
+  delay(2000);
+  voltR();
+}
+
+void voltL()
+{
+  int value_in1 = analogRead(A1);
+  float voltage_in1 = value_in1 * 5.0/1023;
+  Serial.print("Voltage OUT1= ");
+  Serial.println(voltage_in1);
+  int value_in2 = analogRead(A2);
+  float voltage_in2 = value_in2 * 5.0/1023;
+  Serial.print("Voltage OUT2= ");
+  Serial.println(voltage_in2);
+}
+
+void voltR()
+{
+  int value_in3 = analogRead(A3);
+  float voltage_in3 = value_in3 * 5.0/1023;
+  Serial.print("Voltage OUT3= ");
+  Serial.println(voltage_in3);
+  int value_in4 = analogRead(A4);
+  float voltage_in4 = value_in4 * 5.0/1023;
+  Serial.print("Voltage OUT4= ");
+  Serial.println(voltage_in4);
+}
 
 /*
 
@@ -438,6 +477,3 @@ void servoManual_test(void)
 }
 
 */
-
-
-

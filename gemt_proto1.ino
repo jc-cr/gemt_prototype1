@@ -35,12 +35,12 @@ int main (void)
   // Init array of pointers for menus
   const char* mainMenu[] = 
   {
+    "Setup (run once)",
     "9G Servo Test",
     "ESR Test",
     "nRF24 Test",
     "L298N Test",
     "Ultrasonic Sensor Test"
-    
   };
 
   // Submenu for servo
@@ -63,7 +63,16 @@ int main (void)
                               // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
     switch (mainSel)
     {
-      case 1: // 9G
+      case 1: // pinMode Setup
+      {
+        printHline('-');
+        Serial.println("Setting up pins, hold tight!");
+        gemTSetup();
+        Serial.println("Setup completed, thank you for waiting");
+        printHline('-');
+        break;
+      }
+      case 2: // 9G
       { 
         String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
         bool localExit = false; // Exit flag when user selects 'Back'
@@ -114,11 +123,11 @@ int main (void)
         
         break;
       }
-      case 2: // ESR
+      case 3: // ESR
       {
         String ESRConnectionInfoMsg = "Connections:\nAnode -> Analog Pin 0\nCathode -> Purple Pin\n";
         bool   localExit            = false;
-        double esrVal = 0.0;
+        double esrVal               = 0.0;
         while (localExit != true)
         {
           switch (infoScreen(ESRConnectionInfoMsg))
@@ -136,13 +145,14 @@ int main (void)
             }
             default:
             {
+              Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
               break;
             }
           }
         }
         break;
       }
-      case 3: // nRF
+      case 4: // nRF
       {
         String nRFConnectionInfoMsg = "Connect functional nRF24 module into SPI1 port\
         \nConnect nRF24 module to be tested into SPI2";
@@ -156,13 +166,35 @@ int main (void)
 
         break;
       }
-      case 4: // L298N
+      case 5: // L298N
       {
-        String HBridgeConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nMotor Input Pin 1 -> 6\nMotor Input Pin 2 -> 7\n";
+        String HBridgeConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nenA -> 11\nenB -> 6\nout1 -> 2\n out2 -> 3\n";
+        bool    localExit               = false;
 
+        while (localExit != true)
+        {
+          switch (infoScreen(HBridgeConnectionInfoMsg))
+          {
+            case true: 
+            {
+              L8298_test();
+              break;
+            }
+            case false:
+            {
+              localExit = true;
+              break;
+            }
+            default:
+            {
+              Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
+              break;
+            }
+          }
+        }
         break;
       }
-      case 5: // Ultrasonic
+      case 6: // Ultrasonic
       {
         String  UltraConnectionInfoMsg  = "Connections:\n+ -> 5V\n- -> GND\nTrig pin -> 27\nEcho pin -> 26\n";
         bool    localExit               = false;
@@ -175,11 +207,11 @@ int main (void)
             {
               if (ultrasonicsensor_test())
               {
-                Serial.println("Test Pass\n");
+                Serial.println("Test Pass");
               }
               else
               {
-                Serial.println("Test Fail\n");
+                Serial.println("Test Fail");
               }
               break;
             }
@@ -190,6 +222,7 @@ int main (void)
             }
             default:
             {
+              Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
               break;
             }
           }
