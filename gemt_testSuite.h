@@ -8,20 +8,23 @@
 #include "ESR.h"
 #include <RF24.h>
 
+// Define global vars if needed
 enum testPins
 {
   servoPWMPin = 9,
-  triggerPin= 27,
+  triggerPin = 27,
   echoPin = 26,
 };
+
+Servo servo;
 
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // Adjusts servo angles based on int inputs
 void servoManualTest(int* anglePtr)
 {
-  Servo servo;
-  servo.attach(9);
+  *anglePtr = 0;
   servo.write(0);
+  servo.attach(servoPWMPin);
 
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
   short int input = 0;
@@ -37,6 +40,8 @@ void servoManualTest(int* anglePtr)
 
     sprintf(buffer, "Current Angle: %d \n", *anglePtr);
     Serial.println(buffer);
+
+    Serial.println(servo.read()); // DEBUG
 
     printHline('#');
 
@@ -63,15 +68,16 @@ void servoManualTest(int* anglePtr)
   }
 
   Serial.println("Returning to Servo Menu..");
+  servo.detach();
 }
 
 // Function for automatic servo testing
 // Goes to 180 deg and then back
 void servoAutoTest(int* anglePtr)
 {
-  Servo servo;
-  servo.attach(9);
+  *anglePtr = 0;
   servo.write(0);
+  servo.attach(servoPWMPin);
 
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
 
@@ -86,7 +92,7 @@ void servoAutoTest(int* anglePtr)
     sprintf(buffer, "Current Angle: %d", *anglePtr);
     Serial.println(buffer);
     servo.write(*anglePtr);
-    delay(1000);
+    delay(500);
   }
 
   Serial.println("Servo will now rotate to 0 in 10 degree increments");
@@ -98,10 +104,10 @@ void servoAutoTest(int* anglePtr)
     sprintf(buffer, "Current Angle: %d", *anglePtr);
     Serial.println(buffer);
     servo.write(*anglePtr);
-    delay(1000);
+    delay(500);
   }
   printHline('#');
-  
+  servo.detach();
 }
 
 //Function for electrolytic capacitor ESR measuring, sends a known well-defined and known current through the cap
@@ -340,6 +346,8 @@ void nRFAutoTest(void)
   printHline('#');
 }
 
+// FIXME: Readout distances to serial
+// FIXME: Provide some kind of start up message
 //Function which tests if an ultrasonic sensor
 //is measuring distance correctly
 bool ultrasonicsensor_test(void)
@@ -373,6 +381,7 @@ bool ultrasonicsensor_test(void)
     return true;
   } 
 }
+
 
 //Function which returns the output voltages
 //on a L8298 motor]

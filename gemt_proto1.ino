@@ -32,7 +32,6 @@ int main (void)
   // Init array of pointers for menus
   const char* mainMenu[] = 
   {
-    "Setup (run once)",
     "9G Servo Test",
     "ESR Test",
     "nRF24 Test",
@@ -64,23 +63,24 @@ int main (void)
       { 
         String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
         bool localExit = false; // Exit flag when user selects 'Back'
-
-        int angle = 0;
-
+        
         // while loop to allow user to go back to previous screen
         while (localExit != true)
         {
           // Servo submenu switch
           unsigned short int subSel = menuSelection("9G Servo Menu", servoMenu, (sizeof(servoMenu) / sizeof(char *)));  
+          int servoAngle = 0;
+          
           switch(subSel)
           {
             case 1: // Manual mode
             {
               bool proceed = infoScreen(servoConnectionInfoMsg);
+            
 
               if (proceed == true)
               {
-                servoManualTest(&angle);
+                servoManualTest(&servoAngle);
               }
 
               break;
@@ -91,7 +91,7 @@ int main (void)
 
               if (proceed == true)
               {
-                servoAutoTest(&angle);
+                servoAutoTest(&servoAngle);
               }
       
               break;
