@@ -2,9 +2,6 @@
 #include "gemt_proto1.h"
 #include "gemt_testSuite.h"
 
-bool DEBUG = 0; // Variable to setup debugging
-
-
 void setup (void)
 {
   delay(50);
@@ -31,20 +28,6 @@ int main (void)
   // Must intialize the arduino firmware
   init();
   setup();
-
-
-  // Space to Debug functions without going to main menu loop
-  if (DEBUG == 1) 
-  {
-    int angle = 0;
-
-    while (true) 
-    {
-      servoAutoTest(&angle);
-    }
-
-    return 0;
-  }
 
   // Init array of pointers for menus
   const char* mainMenu[] = 
@@ -77,16 +60,7 @@ int main (void)
                               // Note: Division specifies the number of elements (ie, the number of char pointers) in the array of pointers
     switch (mainSel)
     {
-      case 1: // pinMode Setup
-      {
-        printHline('-');
-        Serial.println("Setting up pins, hold tight!");
-        gemTSetup();
-        Serial.println("Setup completed, thank you for waiting");
-        printHline('-');
-        break;
-      }
-      case 2: // 9G
+      case 1: // 9G
       { 
         String servoConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nPWM pin -> 9\n";
         bool localExit = false; // Exit flag when user selects 'Back'
@@ -137,7 +111,7 @@ int main (void)
         
         break;
       }
-      case 3: // ESR
+      case 2: // ESR
       {
         String ESRConnectionInfoMsg = "Connections:\nAnode -> Analog Pin 0\nCathode -> Purple Pin\n";
         bool   localExit            = false;
@@ -166,7 +140,7 @@ int main (void)
         }
         break;
       }
-      case 4: // nRF
+      case 3: // nRF
       {
         String nRFConnectionInfoMsg = "Connect functional nRF24 module into SPI1 port\
         \nConnect nRF24 module to be tested into SPI2";
@@ -180,7 +154,7 @@ int main (void)
 
         break;
       }
-      case 5: // L298N
+      case 4: // L298N
       {
         String HBridgeConnectionInfoMsg = "Connections:\n+ -> 5V\n- -> GND\nenA -> 11\nenB -> 6\nout1 -> 2\n out2 -> 3\n";
         bool    localExit               = false;
@@ -208,7 +182,7 @@ int main (void)
         }
         break;
       }
-      case 6: // Ultrasonic
+      case 5: // Ultrasonic
       {
         String  UltraConnectionInfoMsg  = "Connections:\n+ -> 5V\n- -> GND\nTrig pin -> 27\nEcho pin -> 26\n";
         bool    localExit               = false;
@@ -246,7 +220,6 @@ int main (void)
       default:
       {
         Serial.println("Error: Invalid inputs should be caught by getSerrialInput()!");
-
         break;
       }
     }  

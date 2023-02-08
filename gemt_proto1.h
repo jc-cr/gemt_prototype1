@@ -22,7 +22,7 @@ void printHline(char lineChar)
 
 // Function to read user serial input
 // Reads int > 0
-unsigned short int getSerialInput_int(void)
+short int getSerialInput_int(void)
 {
   bool dataAvailable = 0;
   unsigned short int input;
@@ -69,18 +69,6 @@ char getSerialInput_char(void)
   }
   return input; 
 }
-
-/* Might use later
- // Test for valid input
-  for (size_t i = 0; i < sizeof(expectedInputs); ++i)
-  {
-    // Note: Char can be logiacally compares because it's stored as 8 bit int value
-    // Usally matches ASCII code, so char a='a' == char a= 97 
-    bool notMatch = (input == expectedInputs[i]);
-
-  }
-*/
-
 
 
 //========================================================================

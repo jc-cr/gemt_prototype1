@@ -1,3 +1,6 @@
+#ifndef gemt_testSuite_h
+#define gemt_testSuite_h
+
 #include "Arduino.h"
 #include <Servo.h>
 #include <HCSR04.h>
@@ -5,13 +8,12 @@
 #include "ESR.h"
 #include <RF24.h>
 
-#define servoPWMPin 9
-
-
-void gemTSetup()
+enum testPins
 {
-  
-}
+  servoPWMPin = 9,
+  triggerPin= 27,
+  echoPin = 26,
+};
 
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // Adjusts servo angles based on int inputs
@@ -19,22 +21,27 @@ void servoManualTest(int* anglePtr)
 {
   Servo servo;
   servo.attach(9);
+  servo.write(0);
 
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
-  unsigned short int input = 0;
-  servo.write(0);
+  short int input = 0;
+
+
   while (input != 999)
   {
     printHline('#');
     Serial.println("Enter desired angle\
   \nEnter 999 to return to Servo Menu");
+
     printHline('#');
+
     sprintf(buffer, "Current Angle: %d \n", *anglePtr);
     Serial.println(buffer);
+
     printHline('#');
 
     input = getSerialInput_int();
-    
+
     
     // Servo angle limits
     if (input < 0)
@@ -45,7 +52,7 @@ void servoManualTest(int* anglePtr)
     else if (input > 180)
     {
       *anglePtr = 180;
-      servo.write(anglePtr);
+      servo.write(*anglePtr);
     }
     else
     {
@@ -64,6 +71,7 @@ void servoAutoTest(int* anglePtr)
 {
   Servo servo;
   servo.attach(9);
+  servo.write(0);
 
   char buffer[50]; // init buffer of 50 bytes to hold expected string size
 
@@ -335,17 +343,14 @@ void nRFAutoTest(void)
 //Function which tests if an ultrasonic sensor
 //is measuring distance correctly
 bool ultrasonicsensor_test(void)
-{
-  /*
-  
+{ 
   double*   distances;
   double    permDistance;
   double    samples;
   double    i = 0.0;
-  int       trig_pin = 27;
-  int       echo_pin = 26;
+
   
-  HCSR04.begin(trig_pin, echo_pin); 
+  HCSR04.begin(triggerPin, echoPin);
   while (i < 10)
   {
     distances = HCSR04.measureDistanceCm();
@@ -367,7 +372,6 @@ bool ultrasonicsensor_test(void)
   else if (permDistance >= 2 && permDistance <= 400) {
     return true;
   } 
-*/
 }
 
 //Function which returns the output voltages
@@ -478,3 +482,5 @@ void servoManual_test(void)
 }
 
 */
+
+#endif
