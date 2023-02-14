@@ -18,6 +18,13 @@ enum testPins
 
 Servo servo;
 
+// Servo tests adapted from https://docs.arduino.cc/learn/electronics/servo-motors
+/* 
+  Nani comment "Major modifications include adding a 0 state in the manual sweep to 
+  ensure the servo is starting at 0 degrees.
+  The pins are also attached at the beginning of each test and then detached at the end."
+*/
+
 // Function to manually turn 9g microservo through 180 deg using Serial Monitor input
 // Adjusts servo angles based on int inputs
 void servoManualTest(int* anglePtr)
@@ -213,6 +220,7 @@ long readVcc() {
 // Function to test nRF24 plugged into SPI2 port
 // Known working one goes in SPI1
 // Adapted from exampl on https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
+// Reworked to include simultanoes TX and RX with 2 modules attached to 1 arduino
 void nRFAutoTest(void) 
 {
   bool result;
@@ -350,6 +358,14 @@ void nRFAutoTest(void)
 // FIXME: Provide some kind of start up message
 //Function which tests if an ultrasonic sensor
 //is measuring distance correctly
+/*
+  Ultrasonic Code Source: https://www.elegoo.com/blogs/arduino-projects/elegoo-uno-project-super-starter-kit-tutorial
+
+  Used the source code file “SR04_Example.ino”  to determine the distance being read off the sensor. 
+  Used the “SR04.h” library to simplify retrieving distance into one function call SR04(). 
+  The source code only calculated the distance and printed its value out, the edited code used for GEMT has numerous “if” statements for each distance reading. 
+  These “if” statements read a value and display a possible troubleshooting step based on what it is reading.
+*/
 bool ultrasonicsensor_test(void)
 { 
   double*   distances;
