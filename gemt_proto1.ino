@@ -22,7 +22,6 @@ void setup (void)
 
 }
 
-
 int main (void)
 {
   // Must intialize the arduino firmware
@@ -225,8 +224,7 @@ int main (void)
     }  
 
     delay(50);
-}
+  }
 
-
-return 0;
+  return 0;
 }

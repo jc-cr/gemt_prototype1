@@ -211,8 +211,8 @@ long readVcc() {
 }
 
 // Function to test nRF24 plugged into SPI2 port
-// KNown working one goes in SPI1
-// FIXME: figure out why first test is passing when shoudlbn't be
+// Known working one goes in SPI1
+// Adapted from exampl on https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
 void nRFAutoTest(void) 
 {
   bool result;
@@ -382,7 +382,6 @@ bool ultrasonicsensor_test(void)
   } 
 }
 
-
 //Function which returns the output voltages
 //on a L8298 motor]
 float L8298_test(void)
@@ -445,7 +444,6 @@ void voltR()
 }
 
 /*
-
 // Encoder based servo test
 // Will keep for ref. To be updated with arrow key version
 
@@ -489,7 +487,5 @@ void servoManual_test(void)
   // Remember last CLK state
   lastStateCLK = currentStateCLK;
 }
-
 */
-
 #endif

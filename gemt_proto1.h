@@ -10,7 +10,6 @@
 // Function to print horizontal line of a char
 void printHline(char lineChar)
 {
-  
   for (int i = 0; i < 72; ++i)
   {
     Serial.print(lineChar);
@@ -19,9 +18,9 @@ void printHline(char lineChar)
   Serial.println();
 }
 
-
 // Function to read user serial input
 // Reads int > 0
+// Adapted from https://forum.arduino.cc/t/serial-input-basics-updated/382007
 short int getSerialInput_int(void)
 {
   bool dataAvailable = 0;
@@ -70,7 +69,6 @@ char getSerialInput_char(void)
   return input; 
 }
 
-
 //========================================================================
 // Screen Display functions
 //========================================================================
@@ -113,7 +111,6 @@ unsigned short int menuSelection(String menuName, const char* menuOptions[], siz
   return selection; 
 }
 
-
 // Displays the instructions to a test (pins to connect to, etc.)
 // bool return determines if test will proceed or go back to previous screen
 bool infoScreen (String infoMsg)
@@ -155,6 +152,5 @@ bool infoScreen (String infoMsg)
 
   return proceed;
 }
-
 
 #endif
