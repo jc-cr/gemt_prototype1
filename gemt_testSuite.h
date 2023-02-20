@@ -373,18 +373,20 @@ bool ultrasonicsensor_test(void)
   double    samples;
   double    i = 0.0;
 
-  
+  //Serial.println("Ultrasonic test started...");
   HCSR04.begin(triggerPin, echoPin);
   while (i < 10)
   {
     distances = HCSR04.measureDistanceCm();
     samples += distances[0];
     i++;
-    delay(1000);
+    delay(500);
   }
-  permDistance = samples / i;
   
-  if (permDistance > 400) {
+  permDistance = samples / i;
+
+  if (permDistance > 400) 
+  {
     return false;
   } 
    else if (permDistance <= 0) {

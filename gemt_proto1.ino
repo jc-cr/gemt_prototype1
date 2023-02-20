@@ -5,7 +5,8 @@
 void setup (void)
 {
   delay(50);
-  Serial.begin(19200);
+  Serial.begin(115200);
+
 
   //ESR Pins
   pinMode(ESR_PIN, INPUT);//reading miliVolt
@@ -184,15 +185,11 @@ int main (void)
       case 5: // Ultrasonic
       {
         String  UltraConnectionInfoMsg  = "Connections:\n+ -> 5V\n- -> GND\nTrig pin -> 27\nEcho pin -> 26\n";
-        bool    localExit               = false;
+        bool proceed = infoScreen(UltraConnectionInfoMsg);
 
-        while (localExit != true)
+        if (proceed == true)
         {
-          switch (infoScreen(UltraConnectionInfoMsg))
-          {
-            case true: 
-            {
-              if (ultrasonicsensor_test())
+           if (ultrasonicsensor_test())
               {
                 Serial.println("Test Pass");
               }
@@ -200,20 +197,8 @@ int main (void)
               {
                 Serial.println("Test Fail");
               }
-              break;
-            }
-            case false:
-            {
-              localExit = true;
-              break;
-            }
-            default:
-            {
-              Serial.println("Error: Invalid inputs should be caught by getSerrialInput_int() !");
-              break;
-            }
-          }
         }
+        
         break;
       }
       default:
