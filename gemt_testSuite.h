@@ -135,7 +135,7 @@ double ESR_test(void)
   Serial.println("Setting up");
   
   Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
+  analogReference(INTERNAL);//setting vRef to internal reference 1.1V
  
   digitalWrite(PULSE_PIN,HIGH);//low enables T1
   
@@ -368,36 +368,35 @@ void nRFAutoTest(void)
 */
 bool ultrasonicsensor_test(void)
 { 
-  double*   distances;
+  long      duration;
+  int       distance;
+  //bool      measuring = true;
   double    permDistance;
   double    samples;
-  double    i = 0.0;
 
-  //Serial.println("Ultrasonic test started...");
-  HCSR04.begin(triggerPin, echoPin);
-  while (i < 10)
+
+  Serial.println("Ultrasonic test starting, enter any character to end test...");
+
+  while (Serial.available() == 0)
   {
-    distances = HCSR04.measureDistanceCm();
-    samples += distances[0];
-    i++;
+     // Clears the trigPin
+    digitalWrite(triggerPin, LOW);
+    delayMicroseconds(2);
+    // Sets the trigPin on HIGH state for 10 micro seconds
+    digitalWrite(triggerPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(triggerPin, LOW);
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
+    // Calculating the distance
+    distance = duration * 0.034 / 2;
+    // Prints the distance on the Serial Monitor
     delay(500);
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
   }
   
-  permDistance = samples / i;
-
-  if (permDistance > 400) 
-  {
-    return false;
-  } 
-   else if (permDistance <= 0) {
-    return false;
-   }
-  else if (permDistance < 2 && permDistance > 0) {
-    return false;
-  }
-  else if (permDistance >= 2 && permDistance <= 400) {
-    return true;
-  } 
 }
 
 //Function which returns the output voltages

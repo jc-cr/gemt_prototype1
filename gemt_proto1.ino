@@ -21,6 +21,10 @@ void setup (void)
   pinMode(L8in3, OUTPUT);
   pinMode(L8in4, OUTPUT);
 
+  //Ultrasonic Sensor Pins
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
 }
 
 int main (void)
