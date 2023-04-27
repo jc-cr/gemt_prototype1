@@ -12,9 +12,9 @@
 #endif
 
 //define the input and output pin we will use for ESR
-#define DISCHARGE_PIN 42
+#define DISCHARGE_PIN 41
 #define ESR_PIN A0
-#define PULSE_PIN 43
+#define PULSE_PIN 39
 
 //define the in and out pins for L8298
 #define L8in1 5

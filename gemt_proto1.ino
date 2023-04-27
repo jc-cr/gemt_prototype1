@@ -115,9 +115,10 @@ int main (void)
       {
         String ESRConnectionInfoMsg = "Connections:\nAnode -> Analog Pin 0\nCathode -> Purple Pin\n";
         bool   localExit            = false;
-        double esrVal               = 0.0;
+       
         while (localExit != true)
         {
+           double esrVal               = 0.0;
           switch (infoScreen(ESRConnectionInfoMsg))
           {
             case true: 

@@ -121,15 +121,28 @@ void servoAutoTest(int* anglePtr)
 //at a very well-defined voltage and measures the resistance through probes
 double ESR_test(void)
 {
-  unsigned long esrSamples;
-  double        miliVolt;
-  double        esrVal;
-  double        esrCal;
-  double        Vcc;
-  double        totalAvg;
-  double        vRef = 1.069;//voltage on the Aref pin 
+  unsigned long esrSamples = 0.00;
+  double        miliVolt = 0.00;
+  double        esrVal =0.00;
+  double        Vcc = 0.00;
+  double        totalAvg = 0.00;
+  double        vRef = 1.068;//voltage on the Aref pin 
   double        current = 0.088564;
   int           count = 0;
+   // Increase delay after setting the voltage reference
+  analogReference(INTERNAL1V1); // Setting vRef to internal reference 2.56V
+  delay(500); // Increase delay to 500ms
+
+  // Test ADC reading separately
+  Serial.println("Testing ADC separately...");
+  for (int i = 0; i < 10; i++) {
+    int adcValue = analogRead(ESR_PIN);
+    Serial.print("ADC value: ");
+    Serial.println(adcValue);
+    delay(500);
+  }
+  Serial.println("Done with separate ADC testing.");
+
 
   Serial.println("ESR Meter");
   Serial.println("Setting up");
@@ -138,7 +151,7 @@ double ESR_test(void)
   analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
  
   digitalWrite(PULSE_PIN,HIGH);//low enables T1
-  
+
   digitalWrite(PULSE_PIN,HIGH);//low disables T2
   //pinMode(BUTTON_PIN,INPUT_PULLUP);//setting up for a button (will use this for zeroing)
   delay(1000);
@@ -159,8 +172,6 @@ double ESR_test(void)
     esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
     //esrVal = (miliVolt*100)/((Vcc)-(miliVolt));
     esrVal = esrVal * 1000; //esrval in mOhms
-  
-    esrVal = esrVal - 286.77;
     totalAvg += esrVal;
     count++;
   }
@@ -368,36 +379,7 @@ void nRFAutoTest(void)
 */
 bool ultrasonicsensor_test(void)
 { 
-  double*   distances;
-  double    permDistance;
-  double    samples;
-  double    i = 0.0;
-
-  //Serial.println("Ultrasonic test started...");
-  HCSR04.begin(triggerPin, echoPin);
-  while (i < 10)
-  {
-    distances = HCSR04.measureDistanceCm();
-    samples += distances[0];
-    i++;
-    delay(500);
-  }
   
-  permDistance = samples / i;
-
-  if (permDistance > 400) 
-  {
-    return false;
-  } 
-   else if (permDistance <= 0) {
-    return false;
-   }
-  else if (permDistance < 2 && permDistance > 0) {
-    return false;
-  }
-  else if (permDistance >= 2 && permDistance <= 400) {
-    return true;
-  } 
 }
 
 //Function which returns the output voltages
@@ -415,6 +397,7 @@ float L8298_test(void)
   digitalWrite(L8in2, LOW);
   delay(2000);
   voltL();
+  
   digitalWrite(L8in1, LOW);
   digitalWrite(L8in2, HIGH);
   delay(2000);
